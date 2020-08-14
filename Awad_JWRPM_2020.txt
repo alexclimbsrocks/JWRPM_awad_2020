@@ -1,0 +1,318 @@
+**The following code is for Stata and used to produce the results from 'Future Citation'
+
+clear all
+
+
+import delimited "D:\Google Drive\Working_Papers\PBAC_CE\DataFiltered4_.csv", clear 
+save "D:\Google Drive\Working_Papers\PBAC_CE\survey_data_rr.dta", replace
+
+use  "D:\Google Drive\Working_Papers\PBAC_CE\survey_data_rr.dta", clear
+
+set seed 987
+
+gen price=-c11cost
+
+mixlogit choice c11cost, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+ estat ic
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table3.doc", replace ctitle(Full Model)
+
+
+
+		
+replace gender=gender-1
+tab gender
+*keep if gender==0 | gender==1		
+
+gen homeowner=1 if rent==2
+replace homeowner =0 if missing(homeowner )	
+
+gen aware=1 if awareness ==3 | awareness ==4
+replace aware=0 if awareness==1 | awareness ==2
+
+gen age_dummy=0 if age==8 | age==9 | age==10
+replace age_dummy=1 if missing(age_dummy )
+
+gen gender_c21largr=gender*c21largr
+gen gender_c21smallr=gender*c21smallr
+gen gender_c21wastew=gender*c21wastew
+gen gender_c31arebate=gender*c31arebate
+gen gender_c31grestrict=gender*c31grestrict
+gen gender_c31wrestrict=gender*c31wrestrict
+gen gender_c41aqinj=gender*c41aqinj
+gen gender_c41resv=gender*c41resv
+
+gen homeowner_c21largr=homeowner*c21largr
+gen homeowner_c21smallr=homeowner*c21smallr
+gen homeowner_c21wastew=homeowner*c21wastew
+gen homeowner_c31arebate=homeowner*c31arebate
+gen homeowner_c31grestrict=homeowner*c31grestrict
+gen homeowner_c31wrestrict=homeowner*c31wrestrict
+gen homeowner_c41aqinj=homeowner*c41aqinj
+gen homeowner_c41resv=homeowner*c41resv
+
+gen supplieriwell_c21largr=supplieriwell*c21largr
+gen supplieriwell_c21smallr=supplieriwell*c21smallr
+gen supplieriwell_c21wastew=supplieriwell*c21wastew
+gen supplieriwell_c31arebate=supplieriwell*c31arebate
+gen supplieriwell_c31grestrict=supplieriwell*c31grestrict
+gen supplieriwell_c31wrestrict=supplieriwell*c31wrestrict
+gen supplieriwell_c41aqinj=supplieriwell*c41aqinj
+gen supplieriwell_c41resv=supplieriwell*c41resv
+
+
+gen aware_c21largr=aware*c21largr
+gen aware_c21smallr=aware*c21smallr
+gen aware_c21wastew=aware*c21wastew
+gen aware_c31arebate=aware*c31arebate
+gen aware_c31grestrict=aware*c31grestrict
+gen aware_c31wrestrict=aware*c31wrestrict
+gen aware_c41aqinj=aware*c41aqinj
+gen aware_c41resv=aware*c41resv
+
+
+gen age_c21largr=age_dummy*c21largr
+gen age_c21smallr=age_dummy*c21smallr
+gen age_c21wastew=age_dummy*c21wastew
+gen age_c31arebate=age_dummy*c31arebate
+gen age_c31grestrict=age_dummy*c31grestrict
+gen age_c31wrestrict=age_dummy*c31wrestrict
+gen age_c41aqinj=age_dummy*c41aqinj
+gen age_c41resv=age_dummy*c41resv
+
+mixlogit choice c11cost if gender==0 | gender==1, rand( gender_c21largr gender_c21smallr gender_c21wastew gender_c31arebate gender_c31grestrict gender_c31wrestrict gender_c41aqinj gender_c41resv c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv   )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table4.doc", replace ctitle(gender)
+ estat ic
+mixlogit choice c11cost, rand( homeowner_c21largr homeowner_c21smallr homeowner_c21wastew homeowner_c31arebate homeowner_c31grestrict homeowner_c31wrestrict homeowner_c41aqinj homeowner_c41resv c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table4.doc", append ctitle(homeowner)
+ estat ic
+mixlogit choice c11cost, rand( supplieriwell_c21largr supplieriwell_c21smallr supplieriwell_c21wastew supplieriwell_c31arebate supplieriwell_c31grestrict supplieriwell_c31wrestrict supplieriwell_c41aqinj supplieriwell_c41resv c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table4.doc", append ctitle(well owner)
+ estat ic
+mixlogit choice c11cost, rand( aware_c21largr aware_c21smallr aware_c21wastew aware_c31arebate aware_c31grestrict aware_c31wrestrict aware_c41aqinj aware_c41resv c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table4.doc", append ctitle(aware)
+ estat ic
+mixlogit choice c11cost, rand( age_c21largr age_c21smallr age_c21wastew age_c31arebate age_c31grestrict age_c31wrestrict age_c41aqinj age_c41resv c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\Table4.doc", append ctitle(age)
+ estat ic
+ 
+ /*
+mixlogit choice c11cost gender_c21largr gender_c21smallr gender_c21wastew gender_c31arebate gender_c31grestrict gender_c31wrestrict gender_c41aqinj gender_c41resv, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv   )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\int_.doc", replace ctitle(gender)
+mixlogit choice c11cost homeowner_c21largr homeowner_c21smallr homeowner_c21wastew homeowner_c31arebate homeowner_c31grestrict homeowner_c31wrestrict homeowner_c41aqinj homeowner_c41resv, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\int_.doc", append ctitle(homeowner)
+mixlogit choice c11cost supplieriwell_c21largr supplieriwell_c21smallr supplieriwell_c21wastew supplieriwell_c31arebate supplieriwell_c31grestrict supplieriwell_c31wrestrict supplieriwell_c41aqinj supplieriwell_c41resv, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\int_.doc", append ctitle(well owner)
+mixlogit choice c11cost aware_c21largr aware_c21smallr aware_c21wastew aware_c31arebate aware_c31grestrict aware_c31wrestrict aware_c41aqinj aware_c41resv, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\int_.doc", append ctitle(aware)
+
+
+*/
+ 
+***Test first and last rounds
+
+gen roundtest=string(id2)
+split roundtest , p(.)
+drop roundtest1
+destring roundtest2 , replace
+mixlogit choice c11cost if roundtest2<4 , rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\revision\roundtest1.doc", replace ctitle(1-3)
+mixlogit choice c11cost if roundtest2>4 , rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\revision\roundtest1.doc", append ctitle(5-7)
+
+****test ommission of atrtibutes
+mixlogit choice c11cost , rand( c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\res_cond1.doc", replace ctitle(reservoir==0)
+mixlogit choice c11cost if c21largr==0 , rand( c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\res_cond1.doc", append ctitle(no res)
+
+
+****test well-owners of atrtibutes
+mixlogit choice c11cost , rand( c21largr c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\res_well.doc", replace ctitle(full)
+mixlogit choice c11cost if supplierdwell==0 , rand( c21largr c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\res_well.doc", append ctitle(omit well owners)
+
+****test online of atrtibutes
+mixlogit choice c11cost if online==1, rand( age_c* c21largr c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\online.doc", replace ctitle(full)
+mixlogit choice c11cost if online==0 , rand( age_c* c21largr c21smallr  c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\online.doc", append ctitle(omit well owners)
+
+****wtp space
+mixlogitwtp choice , price(price) rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif 
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\full_wtp.doc", replace ctitle(traditional)
+mixlogit choice c11cost , rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv  )  group(id2) id(id)  dif nrep(100)
+outreg2 using "D:\Google Drive\Working_Papers\PBAC_CE\full_wtp.doc", append ctitle(WTP-space)
+
+ 
+ 
+ /*
+mixlogit choice c11cost, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv   )  group(id2) id(id)  dif nrep(100)
+
+gen state_int_gres=c31grestrict*statement
+gen state_int_wres=c31wrestrict*statement
+gen state_int_aqu=c41aqinj*statement
+gen state_int_res=c41resv*statement
+gen int_hab_res=c41resv*wil
+
+gen state_int_gres=c31grestrict*statement_binary
+gen state_int_wres=c31wrestrict*statement_binary
+gen state_int_aqu=c41aqinj*statement_binary
+gen state_int_res=c41resv*statement_binary
+gen int_hab_res=c41resv*wil
+
+gen state_int_gres=c31grestrict*supplieriwell
+gen state_int_wres=c31wrestrict*supplieriwell
+gen state_int_aqu=c41aqinj*supplieriwell
+gen state_int_res=c41resv*supplieriwell
+
+gen state_int_gres=c31grestrict*supplieriwell
+gen state_int_wres=c31wrestrict*supplieriwell
+gen state_int_aqu=c41aqinj*supplieriwell
+gen state_int_res=c41resv*supplieriwell
+
+/*
+		
+gen int_wast_well=c21was*supplieriwell
+gen int_wast_female=c21was*gender
+gen int_wast_palouse=c21was*growpalous
+gen int_gres_well=supplieriwell*c31grestrict
+gen int_gres_female=gender*c31grestrict
+gen int_gres_palouse=growpalous*c31grestrict
+gen int_aq_well=supplieriwell*c41aqinj
+gen int_aq_female=gender*c41aqinj
+gen int_aq_palouse=growpalous*c41aqinj		
+		
+		
+		
+		
+		
+mixlogitwtp choice , price(price) rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)  dif iter(15)
+
+
+mixlogit choice c11cost , rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv int_wast_palouse )  group(id2) id(id)  dif nrep(100)
+
+
+
+mixlogit choice c11cost, rand( c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv int_wast_palouse int_wast_female int_wast_well int_aq_palouse int_aq_female int_aq_well int_gres_female )  group(id2) id(id)  dif nrep(100)
+
+
+/*
+set obs 250
+
+gen store_LR_wtp_diff=.
+gen store_SR_wtp_diff=.
+gen store_WW_wtp_diff=.
+gen store_AR_wtp_diff=.
+gen store_GR_wtp_diff=.
+gen store_WR_wtp_diff=.
+gen store_AI_wtp_diff=.
+gen store_RE_wtp_diff=.
+
+
+
+set trace off
+
+	forvalues i=1(1)250 { 
+	
+		preserve
+
+		use "D:\Google Drive\Working_Papers\PBAC_CE\survey_data.dta2", clear
+
+		
+		bsample, cluster(id2) id(choice_set_id) 
+ 
+		mixlogit choice if gender==1, rand(c11cost c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(choice_set_id) id(id)  dif
+		local LR_men_wtp = _b[ c21largr ]/_b[ c11cost] 
+		local SR_men_wtp = _b[ c21smallr ]/_b[ c11cost] 
+		local WW_men_wtp = _b[ c21wastew ]/_b[ c11cost]
+		local AR_men_wtp = _b[ c31arebate ]/_b[ c11cost]
+		local GR_men_wtp = _b[ c31grestrict ]/_b[ c11cost]
+		local WR_men_wtp = _b[ c31wrestrict ]/_b[ c11cost]
+		local AI_men_wtp = _b[ c41aqinj ]/_b[ c11cost]
+		local RE_men_wtp = _b[ c41resv ]/_b[ c11cost]
+		
+		
+		mixlogit choice if gender==2, rand(c11cost c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(choice_set_id) id(id) dif
+		local LR_women_wtp = _b[ c21largr ]/_b[ c11cost]
+		local SR_women_wtp = _b[ c21smallr ]/_b[ c11cost]
+		local WW_women_wtp = _b[ c21wastew ]/_b[ c11cost]
+		local AR_women_wtp = _b[ c31arebate ]/_b[ c11cost]
+		local GR_women_wtp = _b[ c31grestrict ]/_b[ c11cost]
+		local WR_women_wtp = _b[ c31wrestrict ]/_b[ c11cost]
+		local AI_women_wtp = _b[ c41aqinj ]/_b[ c11cost]
+		local RE_women_wtp = _b[ c41resv ]/_b[ c11cost]
+				
+	
+	
+	
+	local LR_wtp_diff=(`LR_men_wtp'-`LR_women_wtp')
+	local SR_wtp_diff=(`SR_men_wtp'-`SR_women_wtp')
+	local WW_wtp_diff=(`WW_men_wtp'-`WW_women_wtp')
+	local AR_wtp_diff=(`AR_men_wtp'-`AR_women_wtp')
+	local GR_wtp_diff=(`GR_men_wtp'-`GR_women_wtp')
+	local WR_wtp_diff=(`WR_men_wtp'-`WR_women_wtp')
+	local AI_wtp_diff=(`AI_men_wtp'-`AI_women_wtp')
+	local RE_wtp_diff=(`RE_men_wtp'-`RE_women_wtp')
+	
+	
+		restore
+	
+		replace store_LR_wtp_diff= `LR_wtp_diff' in `i'
+		replace store_SR_wtp_diff= `SR_wtp_diff' in `i'
+		replace store_WW_wtp_diff= `WW_wtp_diff' in `i'
+		replace store_AR_wtp_diff= `AR_wtp_diff' in `i'
+		replace store_GR_wtp_diff= `GR_wtp_diff' in `i'
+		replace store_WR_wtp_diff= `WR_wtp_diff' in `i'
+		replace store_AI_wtp_diff= `AI_wtp_diff' in `i'
+		replace store_RE_wtp_diff= `RE_wtp_diff' in `i'
+
+		}
+
+save "D:\Google Drive\Working_Papers\PBAC_CE\clearboot_results.dta2", replace
+
+
+
+		ttest store_LR_wtp_diff==0
+		ttest store_SR_wtp_diff==0
+		ttest store_WW_wtp_diff==0
+		ttest store_AR_wtp_diff==0
+		ttest store_GR_wtp_diff==0
+		ttest store_WR_wtp_diff==0
+		ttest store_AI_wtp_diff==0
+		ttest store_RE_wtp_diff==0
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+capture program drop wtp_diff
+program wtp_diff, rclass
+
+mixlogit choice if gender==1, rand(c11cost c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)
+scalar LR_wtp = b[c21largr]/_b[c11cost]
+return scalar n_ LR_wtp=r(N)
+
+mixlogit choice if gender==2, rand(c11cost c21largr c21smallr c21wastew  c31arebate  c31grestrict c31wrestrict c41aqinj c41resv )  group(id2) id(id)
+scalar LR_women_wtp = b[1,2]/b[1,1]
+return scalar n_ LR_women_wtp=r(N)
+
+
+return scalar diff_LR_wtp = LR_wtp-LR_women_wtp
+
+
+end
+
+
+
+
+ simulate wtpteat = r(diff_LR_wtp) , reps(100) seed(1): wtp_diff
+
